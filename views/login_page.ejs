@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="styles/login_page.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Login</h2>
+            <form action="/login" method="post">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" value="username" id="username" name="username" placeholder="&#128100 Type your username">
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" value="password" id="password" name="password" placeholder="&#x1F512 Type your password">
+                </div>
+                <div class="forgot-password">
+                    <a href="/forgot">Forgot password?</a>
+                </div>
+                <input type="submit" value="Login" class="login-button">
+                <div class="or">
+                    <span>Or Sign Up Using</span>
+                </div>
+                <div class="social-icons">
+                    <a href="#"><img src="https://img.icons8.com/color/48/000000/facebook.png" /></a>
+                    <a href="#"><img src="https://img.icons8.com/color/48/000000/twitter.png" /></a>
+                    <a href="#"><img src="https://img.icons8.com/color/48/000000/google-logo.png" /></a>
+                </div>
+                <div class="sign-up">
+                    <a href="/signup">SIGN UP</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+            <% if (locals.msg) { %>
+            alert("<%= msg %>");
+        <% } %>
+    </script>
+</body>
+
+</html>

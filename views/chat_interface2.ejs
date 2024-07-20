@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="styles/chat_interface.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="sidebar">
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+            </div>
+            <div class="chat-list">
+                <!-- Example of a chat item -->
+                <div class="chat-item">
+                    <img src="path/to/profile-pic.jpg" alt="Profile Picture">
+                    <div class="chat-info">
+                        <div class="chat-title">Adobe, Meesho, Graviton, Sprinkl...</div>
+                        <div class="chat-last-message">rahul: ok, shyd try krta hu</div>
+                    </div>
+                    <div class="chat-time">11:27 PM</div>
+                    <div class="chat-unread">2.3K</div>
+                </div>
+                <!-- More chat items can be added here -->
+            </div>
+        </div>
+        <div class="main-chat">
+            <div class="chat-header">
+                <div class="chat-header-title">Adobe, Meesho, Graviton, Sprinkl...</div>
+                <div class="chat-header-subtitle">8 503 members</div>
+            </div>
+            <div class="messages">
+                <!-- Example of a message -->
+                <div class="message message-received">
+                    <div class="message-sender">fake h</div>
+                    <div class="message-time">10:52 AM</div>
+                    <div class="message-content">Ab kya oa hai bhejo</div>
+                </div>
+                <!-- More messages can be added here -->
+            </div>
+            <div class="message-input">
+                <input type="text" placeholder="Message">
+                <button class="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+    <script src="scripts/chat_interface.js"></script>
+</body>
+</html>

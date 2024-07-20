@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="chat_interface.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="sidebar">
+            <div class="logo">
+                <h1>Logo</h1>
+            </div>
+            <div class="menu">
+                <div class="menu-item active">Inbox</div>
+                <div class="menu-item">Statistiques</div>
+                <div class="menu-item">Contacts</div>
+            </div>
+            <div class="contact-list">
+                <!-- Example contact -->
+                <div class="contact" data-last-seen="Dernière vue il y a 5 minutes">
+                    <div class="contact-info">
+                        <div class="contact-name">Baptiste Durand</div>
+                        <div class="contact-message">Comment allez-vous?</div>
+                    </div>
+                    <div class="contact-time">9:34</div>
+                </div>
+                <!-- Add more contacts as needed -->
+            </div>
+        </div>
+        <div class="chat-area">
+            <div class="chat-header">
+                <div class="chat-partner">Baptiste Durand</div>
+                <div class="chat-status">En ligne</div>
+            </div>
+            <div class="chat-messages">
+                <!-- Chat messages will be dynamically loaded here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Saisissez un message">
+                <button class="send-button">Envoyer</button>
+            </div>
+        </div>
+        <div class="profile-area">
+            <div class="profile-header">
+                <div class="profile-picture"></div>
+                <div class="profile-name">Jane Doe</div>
+            </div>
+            <div class="profile-info">
+                <!-- Dynamic profile information -->
+                <div class="profile-detail"><strong>Nom:</strong> Jane Doe</div>
+                <div class="profile-detail"><strong>Email:</strong> jane.doe@example.com</div>
+                <div class="profile-detail"><strong>Téléphone:</strong> +33 6 12 34 56 78</div>
+            </div>
+            <div class="profile-actions">
+                <button class="profile-button">Importer des contacts</button>
+            </div>
+        </div>
+    </div>
+    <script src="chat_interface.js"></script>
+</body>
+</html>

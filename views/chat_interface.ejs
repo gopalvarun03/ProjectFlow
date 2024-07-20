@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="styles/chat_interface.css">
+</head>
+
+<body>
+    <div class="chat-app">
+        <div class="sidebar" id="sidebar">
+            <div class="search-bar-container">
+                <input type="text" placeholder="Search" class="search-bar" onkeyup="searchContacts()">
+                <div class="search-icon">&#128269;</div>
+            </div>
+            <div class="contacts" id="contacts"></div>
+        </div>
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-window">
+                <div class="chat-header" id="chatHeader" onclick="toggleUserInfo(true)">
+                    <div class="profile-info">
+                        <div class="contact-details">
+                            <div class="contact-name" id="chatContactName"></div>
+                            <div class="contact-status" id="chatContactStatus"></div>
+                        </div>
+                        <div class="profile-pic" id="chatProfilePic"></div>
+                    </div>
+                    <div class="back-arrow" id="backArrow" onclick="toggleSidebar()">
+                        &#8592;
+                    </div>
+                </div>
+                <div class="chat-body" id="chatBody">
+                    <!-- Chat messages will be appended here -->
+                </div>
+                <div class="chat-footer">
+                    <input type="text" id="messageInput" placeholder="Message" class="message-input" onkeydown="handleKeyDown(event)">
+                    <button id="sendMessageButton" onclick="sendMessage()">
+                        &#10148;
+                    </button>
+                </div>
+            </div>
+            <div class="user-info" id="userInfo">
+                <div class="user-info-header">
+                    <button class="close-btn" onclick="toggleUserInfo(false)">X</button>
+                </div>
+                <div class="user-profile">
+                    <div class="profile-pic-large" id="userProfilePic"></div>
+                    <div class="user-name" id="userName"></div>
+                    <div class="user-status" id="userStatus"></div>
+                </div>
+                <div class="user-details">
+                    <p id="userPhone"></p>
+                    <p id="userBio"></p>
+                </div>
+                <div class="user-media">
+                    <h3>Media</h3>
+                    <div class="media-gallery" id="userMedia"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/chat_interface.js"></script>
+</body>
+
+</html>

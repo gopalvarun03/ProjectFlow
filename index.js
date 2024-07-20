@@ -24,7 +24,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
 
 
-let curruser="gopalvarun03";
+let curruser="";
 
 app.get("/",(req,res)=>{
     res.redirect("/login");
@@ -85,29 +85,28 @@ function get_details() {
   
 
 
-async function get_messages(enduser)
-{
-    try{
-        var listof=[];
-        const messages=await db.query("SELECT * from messages WHERE (from_id=$1 AND to_id=$2) OR (from_id=$3 AND to_id=$4)",[curruser,enduser,enduser,curruser]);
-        for(let i=0;i<messages.rows.length;i++)
-        {
-            if(messages.rows[i]['from_id']==curruser)
-            {
-                listof.append({ "fr":0, "msg":messages.rows[i][msgcontent]});
-            }
-            else{
-                listof.append({ "fr":1, "msg":messages.rows[i][msgcontent]});
+  async function get_messages(enduser) {
+    try {
+        let listof = [];
+        const messages = await db.query(
+            "SELECT * FROM messages WHERE (from_id = $1 AND to_id = $2) OR (from_id = $3 AND to_id = $4)",
+            [curruser, enduser, enduser, curruser]
+        );
+
+        for (let i = 0; i < messages.rows.length; i++) {
+            if (messages.rows[i]['from_id'] == curruser) {
+                listof.push({ "fr": 0, "msg": messages.rows[i]['msgcontent'] });
+            } else {
+                listof.push({ "fr": 1, "msg": messages.rows[i]['msgcontent'] });
             }
         }
-        return {"list":listof};
-    }
-    catch(err)
-    {
+        return { "list": listof };
+    } catch (err) {
         console.log(err);
-        return {"list":{}};
+        return { "list": [] };
     }
 }
+
 
 
 
@@ -187,6 +186,19 @@ app.get("/userfriends", async (req, res) => {
     }
 });
 
+app.post("/getmessages",express.json(), async (req, res) => {
+    try {
+        let enduser = req.body["endusert"];
+        // enduser="John";
+        console.log(req.body);
+        const mesgs = await get_messages(enduser);
+        console.log(mesgs);
+        res.json(mesgs);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch messages" });
+    }
+});
 
 
 app.post("/viewchat",(req,res)=>{

@@ -52,6 +52,7 @@ function loadContacts() {
         contactsData2.forEach(c => {
             const contactElement = document.createElement('div');
             contactElement.className = 'contact';
+            contactElement.id=c;
             contactElement.innerHTML = `
                 <div class="profile-pic" style="background-color: ${getRandomColor()}"></div>
                 <div class="contact-info">
@@ -59,7 +60,7 @@ function loadContacts() {
                     <div class="contact-status">Last seen</div>
                 </div>
             `;
-            // contactElement.onclick = () => openChat(index);
+            contactElement.onclick = () => openChat(c);
             contactsContainer.appendChild(contactElement);
         });
     })
@@ -84,48 +85,81 @@ function loadContacts() {
     });
 
 
-    // contactsData2.forEach((c) => {
-    //     const contactElement = document.createElement('div');
-    //     contactElement.className = 'contact';
-    //     contactElement.innerHTML = `
-    //         <div class="profile-pic" style="background-color: ${getRandomColor()}"></div>
-    //         <div class="contact-info">
-    //             <div class="contact-name">${c}</div>
-    //             <div class="contact-status">Last seen</div>
-    //         </div>
-    //     `;
-    //     // contactElement.onclick = () => openChat(index);
-    //     contactsContainer.appendChild(contactElement);
-    // });
-
-
-
-
 }
 
-// Open a chat with the selected contact
-function openChat(index) {
-    currentChat = contactsData[index];
+// // Open a chat with the selected contact
+// function openChat(index) {
+//     currentChat = contactsData[index];
+//     const chatHeader = document.getElementById('chatHeader');
+//     const chatBody = document.getElementById('chatBody');
+
+//     document.getElementById('chatContactName').textContent = currentChat.name;
+//     document.getElementById('chatContactStatus').textContent = currentChat.lastSeen;
+//     document.getElementById('chatProfilePic').style.backgroundColor = getRandomColor();
+
+//     chatBody.innerHTML = '';
+//     currentChat.messages.forEach(message => {
+//         const messageElement = document.createElement('div');
+//         messageElement.className = `message ${message.type}`;
+//         messageElement.textContent = message.text;
+//         messageElement.setAttribute('data-time', `${message.time} ${message.seen ? '✓✓' : '✓'}`);
+//         chatBody.appendChild(messageElement);
+//     });
+
+//     if (window.innerWidth < 768) {
+//         document.getElementById('sidebar').style.display = 'none';
+//     }
+// }
+
+function openChat(enduser) {
+    // currentChat = contactsData.find(contact => contact.id === enduser);
     const chatHeader = document.getElementById('chatHeader');
     const chatBody = document.getElementById('chatBody');
 
-    document.getElementById('chatContactName').textContent = currentChat.name;
-    document.getElementById('chatContactStatus').textContent = currentChat.lastSeen;
+    document.getElementById('chatContactName').textContent = enduser;
+    // document.getElementById('chatContactStatus').textContent = currentChat.lastSeen;
     document.getElementById('chatProfilePic').style.backgroundColor = getRandomColor();
 
-    chatBody.innerHTML = '';
-    currentChat.messages.forEach(message => {
-        const messageElement = document.createElement('div');
-        messageElement.className = `message ${message.type}`;
-        messageElement.textContent = message.text;
-        messageElement.setAttribute('data-time', `${message.time} ${message.seen ? '✓✓' : '✓'}`);
-        chatBody.appendChild(messageElement);
-    });
+    fetchMessages(enduser); // Call to fetch messages from the server
 
-    if (window.innerWidth < 768) {
-        document.getElementById('sidebar').style.display = 'none';
-    }
+    // if (window.innerWidth < 768) {
+    //     document.getElementById('sidebar').style.display = 'none';
+    // }
 }
+
+function fetchMessages(enduser) {
+    console.log("End user ",enduser);
+    fetch('/getmessages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ endusert: enduser })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const chatBody = document.getElementById('chatBody');
+        chatBody.innerHTML = '';
+
+        if (data.list) {
+            data.list.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.className = `message ${message.fr === 0 ? 'sent' : 'received'}`;
+                messageElement.textContent = message.msg;
+                chatBody.appendChild(messageElement);
+            });
+        }
+        console.log(data);
+        console.log(data.list);
+
+    })
+    .catch(error => {
+        console.error('Error fetching messages:', error);
+    });
+}
+
+
+
 
 // Toggle user info panel
 function toggleUserInfo(show) {
@@ -178,21 +212,50 @@ function searchContacts() {
     const contactsContainer = document.getElementById('contacts');
 
     contactsContainer.innerHTML = '';
-    contactsData.forEach((contact, index) => {
-        if (contact.name.toLowerCase().includes(searchQuery)) {
+
+
+    fetch("/userfriends")
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        let contactsData2 = data['details']['users'];
+        console.log(data['details']);
+        contactsData2.forEach(c => {
+            if (c.toLowerCase().includes(searchQuery)){
             const contactElement = document.createElement('div');
             contactElement.className = 'contact';
+            contactElement.id=c;
             contactElement.innerHTML = `
                 <div class="profile-pic" style="background-color: ${getRandomColor()}"></div>
                 <div class="contact-info">
-                    <div class="contact-name">${contact.name}</div>
-                    <div class="contact-status">${contact.lastSeen}</div>
+                    <div class="contact-name">${c}</div>
+                    <div class="contact-status">Last seen</div>
                 </div>
             `;
-            contactElement.onclick = () => openChat(index);
+            contactElement.onclick = () => openChat(c);
             contactsContainer.appendChild(contactElement);
-        }
-    });
+            }
+        });
+    })
+
+
+
+
+    // contactsData2.forEach((contact, index) => {
+    //     if (contact.name.toLowerCase().includes(searchQuery)) {
+    //         const contactElement = document.createElement('div');
+    //         contactElement.className = 'contact';
+    //         contactElement.innerHTML = `
+    //             <div class="profile-pic" style="background-color: ${getRandomColor()}"></div>
+    //             <div class="contact-info">
+    //                 <div class="contact-name">${contact.name}</div>
+    //                 <div class="contact-status">last seen</div>
+    //             </div>
+    //         `;
+    //         contactElement.onclick = () => openChat(index);
+    //         contactsContainer.appendChild(contactElement);
+    //     }
+    // });
 }
 
 // Generate a random color for profile pictures

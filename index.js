@@ -24,7 +24,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended:true}));
 
 
-let curruser="";
+let curruser="gopalvarun03";
 
 app.get("/",(req,res)=>{
     res.redirect("/login");
@@ -51,35 +51,38 @@ async function checkIfValid(a) {
     }
 }
 
-
-async function get_details()
-{
-    try{
-    const res1=await db.query("SELECT to_id FROM messages WHERE from_id = $1",[curruser]);
-    const res2=await db.query("SELECT from_id FROM messages WHERE to_id = $1",[curruser]);
-    let l1=[];
-    for(let i=0;i<res1.rows.length;i++)
-    {
-        l1.push(res1.rows[i]['to_id']);
+function get_details() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res1 = await db.query("SELECT to_id FROM messages WHERE from_id = $1", [curruser]);
+        const res2 = await db.query("SELECT from_id FROM messages WHERE to_id = $1", [curruser]);
         
-    }
-    for(let i=0;i<res2.rows.length;i++)
-    {
-        l2.push(res2.rows[i]['from_id']);
-    }
-    let setofusers=new Set(l1);
-    let obj={
-        "users":setofusers
-    }
-    console.log(setofusers);
-    return obj;
-    }
-    catch(err)
-    {
+        let l1 = [];
+        let l2 = [];
+        
+        for (let i = 0; i < res1.rows.length; i++) {
+          l1.push(res1.rows[i]['to_id']);
+        }
+        
+        for (let i = 0; i < res2.rows.length; i++) {
+          l2.push(res2.rows[i]['from_id']);
+        }
+        
+        let setofusers = new Set([...l1, ...l2]); // Combine l1 and l2 and create a Set to remove duplicates
+        let obj = {
+          "users": Array.from(setofusers) // Convert Set to Array for easier use in rendering
+        };
+        
+        console.log(obj.users);
+        resolve(obj); // Resolve the promise with the result
+      } catch (err) {
         console.log(err);
-        return {"users":{}};
-    }
-}
+        reject(err); // Reject the promise with the error
+      }
+    });
+  }
+  
+  
 
 
 async function get_messages(enduser)
@@ -106,31 +109,42 @@ async function get_messages(enduser)
     }
 }
 
-var frusers={"users":{}};
 
-app.post("/login",(req,res)=>{
-    const userdata=req.body;
+
+app.post("/login", async (req, res) => {
+    const userdata = req.body;
     const user_id = userdata["username"];
     const password = userdata["password"];
-    checkIfValid(userdata).then(val=>{
-        if(val)
-        {
-            console.log("Successful login");
-            curruser=userdata["username"];
-            frusers= get_details();
-            res.render("chat_interface.ejs",frusers);
-        }
-        else{
-            res.render("login_page.ejs",{
-                msg: "Please enter the Correct Username/Password"
-            });
-        }
-    })
-
-    console.log(`Entered user name is ${user_id} and entered password is ${password}`);
     
-})
-
+    try {
+      const val = await checkIfValid(userdata); // Wait for checkIfValid to resolve
+      
+      if (val) {
+        console.log("Successful login");
+        curruser = userdata["username"];
+        
+        try {
+          const frusers = await get_details(); // Await the promise returned by get_details
+          res.render("chat_interface.ejs", { frusers }); // Render the response after the promise resolves
+        } catch (error) {
+          console.error(error);
+          res.status(500).send("An error occurred while fetching details.");
+        }
+        
+      } else {
+        res.render("login_page.ejs", {
+          msg: "Please enter the Correct Username/Password"
+        });
+      }
+      
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("An error occurred during login.");
+    }
+    
+    console.log(`Entered user name is ${user_id} and entered password is ${password}`);
+  });
+  
 
 app.get("/signup",(req,res)=>{
     // console.log(curruser);
@@ -166,7 +180,7 @@ app.get("/userfriends", async (req, res) => {
     try {
         const details = await get_details();
         let set=new Set(["Stark","Tony"]);
-        res.send({"users":set});
+        res.json({details});
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Failed to fetch user friends" });

@@ -15,7 +15,24 @@
                 <input type="text" placeholder="Search" class="search-bar" onkeyup="searchContacts()">
                 <div class="search-icon">&#128269;</div>
             </div>
-            <div class="contacts" id="contacts"></div>
+            <div class="contacts" id="contacts">
+
+                <% if (frusers && frusers.users && frusers.users.length > 0) { %>
+                    <% for (let i = 0; i < frusers.users.length; i++) { %>
+                      <div class="contact">
+                        <div class="profile-pic" style="background-color: red"></div>
+                        <div class="contact-info">
+                          <div class="contact-name"><%= frusers.users[i] %></div>
+                          <div class="contact-status">Last seen</div>
+                        </div>
+                      </div>
+                    <% } %>
+                  <% } else { %>
+                    <div>No users found.</div>
+                  <% } %>
+
+
+            </div>
         </div>
         <div class="chat-container" id="chatContainer">
             <div class="chat-window">

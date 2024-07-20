@@ -47,8 +47,8 @@ function loadContacts() {
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        contactsData2 = data['users'];
-        console.log(data['users']);
+        contactsData2 = data['details']['users'];
+        console.log(data['details']);
         contactsData2.forEach(c => {
             const contactElement = document.createElement('div');
             contactElement.className = 'contact';

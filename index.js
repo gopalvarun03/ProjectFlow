@@ -201,6 +201,20 @@ app.post("/getmessages",express.json(), async (req, res) => {
 });
 
 
+app.post("/sendmessage",express.json(), async (req, res) => {
+    try {
+    const d= db.query("SELECT * FROM messages");
+    let sno = (await d).rows.length;
+    let enduser = req.body["endusert"];
+    let msgct=req.body["msgcontent"];
+    db.query("INSERT INTO messages VALUES ($1,$2,$3,$4)",[sno+1,curruser,enduser,msgct]);
+}
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch messages" });
+    }
+});
+
 app.post("/viewchat",(req,res)=>{
 
     res.render("chat_interface.ejs");
@@ -220,3 +234,4 @@ app.post("/reset",(req,res)=>{
 app.listen(port,()=>{
     console.log(`Running on port ${port} successfully`);
 })
+

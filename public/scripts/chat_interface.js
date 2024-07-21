@@ -190,12 +190,34 @@ function toggleUserInfo(show) {
 function sendMessage() {
     const messageInput = document.getElementById('messageInput');
     const messageText = messageInput.value.trim();
-    if (messageText && currentChat) {
-        const message = { text: messageText, type: 'sent', time: '23:30', seen: false };
-        currentChat.messages.push(message);
-        openChat(contactsData.indexOf(currentChat));
-        messageInput.value = '';
-    }
+
+    // if (messageText && currentChat) {
+    //     const message = { text: messageText, type: 'sent', time: '23:30', seen: false };
+    //     currentChat.messages.push(message);
+    //     openChat(contactsData.indexOf(currentChat));
+    //     messageInput.value = '';
+    // }
+
+    let enduser=document.getElementById("chatContactName").innerText;
+    fetch('/sendmessage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ endusert: enduser, msgcontent:messageText })
+    })
+    .then(response => response.json())
+    .then((data)=>{
+        openChat(enduser);
+    })
+    .catch(error => {
+        console.error('Error sending messages:', error);
+    });
+
+
+
+
+
 }
 
 // Handle enter key to send message
